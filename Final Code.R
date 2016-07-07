@@ -24,10 +24,13 @@ total <- total [, c(1,6,108,2:5,7:107)]
 
 total$Age[total$Age < 14] <- 14
 total$Age[total$Age > 100] <- 100
-
-total <- complete (mice (total))
+total$Age [is.na (total$Age)] <- -1
 
 total_sparse <- cbind (total[,c(1,2), drop = FALSE], model.matrix(~-1+., total[,-c(1,2)]))
+
+total_sparse$Age[total_sparse$Age == -1] <- NA
+
+total_sparse <- complete (mice (total_sparse))
 
 training <- total_sparse[-test_idx,]
 testing <- total_sparse[test_idx,]
